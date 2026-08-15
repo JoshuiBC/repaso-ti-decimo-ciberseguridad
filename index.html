@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Práctica de repaso — TIC · Décimo · II Trimestre 2026</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#12344d; --navy2:#0d283b; --teal:#1d6f78; --orange:#d97724;
+  --bg:#f4f6f7; --paper:#fff; --line:#dde4e8; --text:#17232c; --muted:#70808c;
+  --ok:#167a4a; --okbg:#e8f6ef; --bad:#b33b32; --badbg:#fbeceb;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+.topbar{background:var(--navy2);padding:13px 20px;position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px #0002}
+.topbar-title{color:#fff;font-size:15px;font-weight:600}
+.topbar-sub{color:#b9d8df;font-size:12px;margin-top:3px}
+.chip{background:#f3a24b;color:#2c1c08;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:800;white-space:nowrap}
+.wrap{max-width:940px;margin:0 auto;padding:20px 16px 42px}
+.cover{background:var(--paper);border-radius:15px;border:1px solid var(--line);padding:26px;margin-bottom:18px;text-align:center;box-shadow:0 5px 18px #102a3a0b}
+.school{font-size:12px;font-weight:800;letter-spacing:.8px;color:var(--teal);margin-bottom:8px}
+.cover h2{font-size:24px;color:var(--navy);margin-bottom:8px}
+.course-line{font-size:14px;font-weight:700;color:#405563;margin-bottom:4px}
+.teacher-line{font-size:12px;color:#7a8993;margin-bottom:4px}
+.bank-line{font-size:11px;font-weight:700;color:var(--teal);margin-bottom:10px}
+.cover .sub{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:18px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.stat{background:#f8fafb;border-radius:10px;padding:12px 8px;border:1px solid #e3e9ec}
+.stat-n{font-size:27px;font-weight:800;color:var(--navy)}
+.stat-l{font-size:11px;color:#87959f;margin-top:2px}
+.bar-wrap{background:#f2f5f6;border-radius:10px;padding:12px 16px}
+.bar-lbl{font-size:12px;color:#73818a;margin-bottom:6px;display:flex;justify-content:space-between;gap:12px}
+.bar-track{height:8px;background:#dce3e6;border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--orange));border-radius:4px;transition:width .35s}
+.notice{margin-top:14px;font-size:12px;color:#6f7d86;background:#fff8eb;border:1px solid #f0d7ad;padding:10px 12px;border-radius:9px;line-height:1.55}
+.tabs{display:flex;gap:7px;margin-bottom:19px;flex-wrap:wrap}
+.tab{padding:8px 13px;border-radius:22px;font-size:12px;cursor:pointer;border:1px solid #d4dde1;background:#fff;color:#5e6d76;transition:.15s;font-family:inherit}
+.tab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.tab:hover:not(.active){border-color:var(--teal);color:var(--teal)}
+.section{display:none}
+.section.active{display:block}
+.sec-hd{margin-bottom:14px}
+.sec-hd h3{font-size:18px;color:var(--navy);margin-bottom:4px}
+.sec-hd p{font-size:13px;color:var(--muted);line-height:1.5}
+.dots{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
+.dot{width:23px;height:23px;border-radius:50%;border:1.5px solid #cfd8dd;font-size:10px;display:flex;align-items:center;justify-content:center;color:#8a99a3;font-weight:700;cursor:pointer;background:#fff}
+.dot.ok{background:var(--okbg);border-color:var(--ok);color:var(--ok)}
+.dot.fail{background:var(--badbg);border-color:var(--bad);color:var(--bad)}
+.q-card{background:#fff;border-radius:13px;border:1px solid var(--line);padding:20px;margin-bottom:15px;box-shadow:0 4px 15px #102a3a08}
+.q-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap}
+.q-num{font-size:12px;color:#91a0aa}
+.q-tag{font-size:11px;padding:4px 10px;border-radius:20px;font-weight:700}
+.tag-data{background:#e8f2fb;color:#1c5684}
+.tag-ana{background:#e9f7f5;color:#17655f}
+.tag-model{background:#f2eafa;color:#68418d}
+.tag-er{background:#fff0df;color:#915518}
+.tag-sql{background:#e9eefb;color:#344e92}
+.tag-eth{background:#fbe9ee;color:#8d3850}
+.tag-ti{background:#edf5e8;color:#4c6e32}
+.frag{background:#f8fafb;border-left:3px solid var(--teal);border-radius:0 8px 8px 0;padding:13px 15px;margin-bottom:13px;font-size:13.5px;line-height:1.65;color:#3a4851}
+.q-txt{font-size:15px;line-height:1.55;margin-bottom:13px;font-weight:650}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border-radius:8px;border:1px solid #dbe2e6;cursor:pointer;font-size:13.5px;color:#33414a;background:#fff;transition:.12s;text-align:left;width:100%;font-family:inherit;line-height:1.5}
+.opt:hover:not(.disabled){background:#f0f7f8;border-color:var(--teal)}
+.opt.correct{background:var(--okbg);border-color:var(--ok);color:#125e3c}
+.opt.wrong{background:var(--badbg);border-color:var(--bad);color:#853128}
+.opt.reveal{background:var(--okbg);border-color:var(--ok);color:#125e3c;opacity:.72}
+.opt.disabled{cursor:default;pointer-events:none}
+.opt-l{font-weight:800;min-width:23px}
+.fb{margin-top:11px;padding:11px 14px;border-radius:8px;font-size:12.5px;line-height:1.6;display:none}
+.fb.show{display:block}
+.fb.ok{background:var(--okbg);color:#125e3c;border-left:3px solid var(--ok)}
+.fb.fail{background:var(--badbg);color:#853128;border-left:3px solid var(--bad)}
+.res-card{background:#fff;border-radius:15px;border:1px solid var(--line);padding:30px;text-align:center;margin:16px 0}
+.res-score{font-size:62px;font-weight:850;color:var(--navy)}
+.res-frac{font-size:16px;color:#7b8992;margin-top:4px}
+.res-nota{font-size:21px;font-weight:700;margin-top:9px}
+.res-msg{font-size:13px;color:#66747d;margin-top:9px;line-height:1.6}
+.restart{margin-top:18px;padding:11px 22px;border-radius:8px;border:none;background:var(--navy);color:#fff;font-size:13px;cursor:pointer;font-family:inherit}
+.restart:hover{background:#1a4a6a}
+.breakdown{background:#fff;border-radius:12px;border:1px solid var(--line);padding:19px;margin-top:14px}
+.breakdown h4{font-size:14px;color:var(--navy);margin-bottom:10px}
+.brow{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid #edf0f2;font-size:13px}
+.brow:last-child{border-bottom:none}
+.footer{text-align:center;color:#87949d;font-size:11px;margin-top:24px;line-height:1.6}
+@media(max-width:600px){
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .res-score{font-size:48px}
+  .topbar-sub{display:none}
+}
+
+/* ===== Responsive / GitHub Pages enhancements ===== */
+html{
+  scroll-behavior:smooth;
+  -webkit-text-size-adjust:100%;
+}
+body{
+  min-width:0;
+  overflow-x:hidden;
+}
+button{
+  -webkit-tap-highlight-color:transparent;
+}
+.topbar{
+  padding-left:max(16px, env(safe-area-inset-left));
+  padding-right:max(16px, env(safe-area-inset-right));
+}
+.wrap{
+  width:min(100%, 940px);
+}
+.tabs{
+  position:sticky;
+  top:62px;
+  z-index:80;
+  background:var(--bg);
+  padding:8px 0 10px;
+  margin-bottom:14px;
+}
+.q-card,.cover,.res-card,.breakdown{
+  min-width:0;
+}
+.frag,.q-txt,.opt,.fb,.brow span{
+  overflow-wrap:anywhere;
+  word-break:normal;
+}
+.opt{
+  min-height:46px;
+}
+code, pre{
+  max-width:100%;
+  overflow-x:auto;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+table{
+  width:100%;
+  max-width:100%;
+  border-collapse:collapse;
+  display:block;
+  overflow-x:auto;
+}
+img,svg,video,canvas{
+  max-width:100%;
+  height:auto;
+}
+.dots{
+  row-gap:7px;
+}
+.dot{
+  flex:0 0 23px;
+}
+
+/* Tablet */
+@media (max-width: 820px){
+  .topbar{
+    gap:12px;
+  }
+  .topbar-title{
+    font-size:14px;
+  }
+  .wrap{
+    padding:16px 14px 34px;
+  }
+  .cover{
+    padding:22px 18px;
+  }
+  .cover h2{
+    font-size:22px;
+  }
+  .q-card{
+    padding:18px;
+  }
+  .tabs{
+    top:60px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px){
+  .topbar{
+    padding-top:max(10px, env(safe-area-inset-top));
+    padding-bottom:10px;
+    align-items:flex-start;
+  }
+  .topbar-title{
+    font-size:13px;
+    line-height:1.25;
+  }
+  .topbar-sub{
+    display:none;
+  }
+  .chip{
+    font-size:12px;
+    padding:5px 10px;
+  }
+
+  .wrap{
+    padding:12px 10px 30px;
+  }
+  .cover{
+    padding:18px 14px;
+    border-radius:12px;
+  }
+  .school{
+    font-size:10px;
+    letter-spacing:.6px;
+  }
+  .cover h2{
+    font-size:20px;
+    line-height:1.2;
+  }
+  .course-line{
+    font-size:13px;
+  }
+  .teacher-line,.cover .sub{
+    font-size:12px;
+  }
+
+  .stats-row{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
+  }
+  .stat{
+    padding:10px 6px;
+  }
+  .stat-n{
+    font-size:24px;
+  }
+
+  .bar-wrap{
+    padding:10px 12px;
+  }
+  .bar-lbl{
+    font-size:11px;
+  }
+
+  .notice{
+    font-size:11.5px;
+  }
+
+  .tabs{
+    top:52px;
+    display:flex;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    overscroll-behavior-inline:contain;
+    scrollbar-width:thin;
+    padding:8px 2px 10px;
+    gap:6px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .tab{
+    flex:0 0 auto;
+    padding:8px 12px;
+    font-size:11.5px;
+    white-space:nowrap;
+  }
+
+  .sec-hd h3{
+    font-size:17px;
+  }
+  .sec-hd p{
+    font-size:12px;
+  }
+
+  .dots{
+    max-height:94px;
+    overflow-y:auto;
+    padding:2px 0 4px;
+  }
+  .dot{
+    width:24px;
+    height:24px;
+    flex-basis:24px;
+  }
+
+  .q-card{
+    padding:15px 13px;
+    border-radius:11px;
+    margin-bottom:12px;
+  }
+  .q-meta{
+    align-items:flex-start;
+  }
+  .q-num{
+    font-size:11px;
+  }
+  .q-tag{
+    font-size:10.5px;
+  }
+  .frag{
+    padding:11px 12px;
+    font-size:12.5px;
+    line-height:1.55;
+  }
+  .q-txt{
+    font-size:14px;
+    line-height:1.5;
+  }
+  .opt{
+    padding:11px 12px;
+    font-size:13px;
+    line-height:1.45;
+    gap:8px;
+  }
+  .opt-l{
+    min-width:21px;
+  }
+  .fb{
+    padding:10px 12px;
+    font-size:12px;
+  }
+
+  .res-card{
+    padding:22px 14px;
+  }
+  .res-score{
+    font-size:44px;
+  }
+  .res-frac{
+    font-size:14px;
+  }
+  .res-nota{
+    font-size:18px;
+  }
+  .breakdown{
+    padding:14px;
+  }
+  .brow{
+    align-items:flex-start;
+    font-size:12px;
+  }
+}
+
+/* Small phones */
+@media (max-width: 400px){
+  .topbar{
+    padding-left:10px;
+    padding-right:10px;
+  }
+  .topbar-title{
+    max-width:230px;
+  }
+  .wrap{
+    padding-left:8px;
+    padding-right:8px;
+  }
+  .cover h2{
+    font-size:18px;
+  }
+  .stats-row{
+    grid-template-columns:1fr 1fr;
+  }
+  .stat-n{
+    font-size:22px;
+  }
+  .q-card{
+    padding:13px 11px;
+  }
+  .opt{
+    font-size:12.5px;
+  }
+  .brow{
+    flex-direction:column;
+    gap:4px;
+  }
+}
+
+/* Large screens */
+@media (min-width: 1200px){
+  .wrap{
+    max-width:1040px;
+  }
+  .q-card{
+    padding:22px 24px;
+  }
+}
+
+/* Accessibility and motion */
+@media (prefers-reduced-motion: reduce){
+  *{
+    scroll-behavior:auto !important;
+    transition:none !important;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <div class="topbar-title">Práctica de repaso — Tecnologías de Información · 80 ítems</div>
+    <div class="topbar-sub">Prof. Joshua Ismael Bolaños Corrales · Ciberseguridad · Décimo · II Trimestre 2026</div>
+  </div>
+  <div class="chip" id="chip">0 / 80</div>
+</div>
+
+<div class="wrap">
+  <div class="cover">
+    <div class="school">COLEGIO TÉCNICO PROFESIONAL CIT</div>
+    <h2>Práctica de repaso — II Trimestre 2026</h2>
+    <div class="course-line">Tecnologías de Información · Décimo</div>
+    <div class="teacher-line">Prof. Joshua Ismael Bolaños Corrales</div>
+    <div class="bank-line">80 preguntas de repaso</div>
+    <p class="sub">
+      Repaso general de los contenidos evaluados en la prueba sumativa.
+    </p>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-n" id="s-ok">0</div><div class="stat-l">Correctas</div></div>
+      <div class="stat"><div class="stat-n" id="s-fail">0</div><div class="stat-l">Incorrectas</div></div>
+      <div class="stat"><div class="stat-n" id="s-ans">0</div><div class="stat-l">Respondidas</div></div>
+      <div class="stat"><div class="stat-n" id="s-pct">—</div><div class="stat-l">Puntaje</div></div>
+    </div>
+    <div class="bar-wrap">
+      <div class="bar-lbl"><span>Progreso general</span><span id="bar-txt">0 de 80 preguntas</span></div>
+      <div class="bar-track"><div class="bar-fill" id="bar-fill" style="width:0%"></div></div>
+    </div>
+    <div class="notice">
+      La práctica contiene 80 preguntas fijas de repaso, organizadas por tema para cubrir los contenidos del II trimestre.
+    </div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+  <div id="sections"></div>
+
+  <div id="res" class="section">
+    <div class="res-card">
+      <div class="res-score" id="rs">—</div>
+      <div class="res-frac" id="rf">sobre 80 preguntas</div>
+      <div class="res-nota" id="rn"></div>
+      <div class="res-msg" id="rm">Complete las secciones para ver su resultado.</div>
+      <button class="restart" onclick="if(confirm('¿Desea reiniciar la práctica?')) location.reload()">Reiniciar práctica</button>
+    </div>
+    <div class="breakdown">
+      <h4>Resultado por tema</h4>
+      <div id="breakdownRows"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Material de práctica para el II Trimestre 2026 · Tecnologías de Información · Décimo<br>
+    Las explicaciones se muestran después de responder cada pregunta.
+  </div>
+</div>
+
+<script>
+const TOPICS=[{"id": 1, "name": "Datos e información", "short": "Datos", "tag": "tag-data"}, {"id": 2, "name": "Análisis de datos y Big Data", "short": "Análisis", "tag": "tag-ana"}, {"id": 3, "name": "Modelos de bases de datos", "short": "Modelos BD", "tag": "tag-model"}, {"id": 4, "name": "Modelo ER y ERE", "short": "ER / ERE", "tag": "tag-er"}, {"id": 5, "name": "Modelado y PostgreSQL", "short": "PostgreSQL", "tag": "tag-sql"}, {"id": 6, "name": "Ética, datos y legislación", "short": "Ética", "tag": "tag-eth"}, {"id": 7, "name": "Tecnologías de información", "short": "TI", "tag": "tag-ti"}];
+const QS=[{"t": 1, "frag": "Una institución registra cada día asistencia, tardías y ausencias. Al finalizar el mes organiza los registros y concluye que los lunes concentran la mayor cantidad de tardías.", "q": "¿En qué momento los datos se convierten en información?", "opts": ["Cuando se capturan los registros diarios, aunque todavía no se interpreten.", "Cuando los registros se organizan e interpretan y permiten obtener una conclusión.", "Cuando los registros se guardan en un archivo con un nombre definido."], "c": 1, "exp": "Los datos adquieren significado como información cuando se organizan e interpretan para comprender una situación o apoyar una decisión.", "tag": "tag-data", "tl": "Datos"}, {"t": 1, "frag": "Una base contiene nombre, número de identificación, fecha de ingreso y grupo de cada estudiante, organizados en columnas y filas.", "q": "¿Qué tipo de datos predominan en este ejemplo?", "opts": ["Datos estructurados.", "Datos no estructurados.", "Datos en movimiento."], "c": 0, "exp": "Los datos estructurados siguen una organización definida, normalmente mediante filas, columnas, campos y registros.", "tag": "tag-data", "tl": "Datos"}, {"t": 1, "frag": "Un departamento almacena fotografías, grabaciones de audio y comentarios escritos libremente por usuarios.", "q": "¿Cuál clasificación describe mejor estos archivos?", "opts": ["Datos estructurados porque están guardados digitalmente.", "Datos no estructurados porque no siguen una estructura tabular fija.", "Datos abiertos porque pueden existir en distintos formatos."], "c": 1, "exp": "Imágenes, audio, video y texto libre son ejemplos de datos no estructurados cuando no siguen un esquema fijo de filas y columnas.", "tag": "tag-data", "tl": "Datos"}, {"t": 1, "frag": "Un portal institucional publica un conjunto de estadísticas para que cualquier persona pueda consultarlo sin solicitar permisos especiales.", "q": "¿Cómo se clasifican principalmente esos datos?", "opts": ["Datos privados.", "Datos abiertos.", "Datos derivados."], "c": 1, "exp": "Los datos abiertos son accesibles al público sin restricciones de acceso equivalentes a las de los datos privados.", "tag": "tag-data", "tl": "Datos"}, {"t": 1, "frag": "Una empresa mantiene información de salarios disponible únicamente para personal autorizado.", "q": "¿Qué clasificación corresponde mejor?", "opts": ["Datos privados.", "Datos abiertos.", "Datos no estructurados."], "c": 0, "exp": "Los datos privados tienen acceso limitado y deben protegerse de acuerdo con las necesidades y autorizaciones correspondientes.", "tag": "tag-data", "tl": "Datos"}, {"t": 1, "frag": "Un archivo CSV permanece guardado en el servidor de una organización y no se está transmitiendo en ese momento.", "q": "Según el estado de los datos, se considera:", "opts": ["Dato en movimiento.", "Dato almacenado.", "Dato predictivo."], "c": 1, "exp": "Los datos almacenados permanecen guardados en bases de datos, archivos u otros medios.", "tag": "tag-data", "tl": "Datos"}, {"t": 1, "frag": "Una cámara envía continuamente lecturas de eventos hacia un sistema de monitoreo mientras ocurren.", "q": "Durante la transmisión, esos registros son principalmente:", "opts": ["Datos almacenados.", "Datos en movimiento.", "Datos abiertos."], "c": 1, "exp": "Los datos en movimiento circulan por redes o sistemas, especialmente cuando se transmiten en tiempo real.", "tag": "tag-data", "tl": "Datos"}, {"t": 1, "frag": "Un colegio conserva calificaciones históricas para identificar tendencias y apoyar decisiones académicas.", "q": "¿Cuál afirmación explica mejor el valor de los datos?", "opts": ["Su valor depende únicamente de la cantidad almacenada.", "Pueden apoyar el análisis de situaciones y la toma de decisiones.", "Solo tienen valor cuando se convierten en datos abiertos."], "c": 1, "exp": "Los datos son un recurso estratégico porque permiten analizar situaciones, prever resultados y apoyar decisiones.", "tag": "tag-data", "tl": "Datos"}, {"t": 1, "frag": "Un estudiante afirma: «Una imagen no puede ser un dato porque no es un número».", "q": "¿Cuál respuesta es la más correcta según lo estudiado?", "opts": ["Es correcta, porque los datos solo pueden ser valores numéricos.", "Es incorrecta, porque los datos pueden ser números, texto, imágenes, sonidos o registros.", "Es correcta únicamente cuando la imagen no está almacenada en una base de datos."], "c": 1, "exp": "Los datos son representaciones de hechos, valores o medidas y pueden adoptar múltiples formatos.", "tag": "tag-data", "tl": "Datos"}, {"t": 1, "frag": "Dos conjuntos contienen exactamente la misma cantidad de registros. Uno está actualizado y completo; el otro tiene errores y valores faltantes.", "q": "¿Por qué no deberían considerarse igualmente útiles?", "opts": ["Porque la utilidad depende también de la calidad de los datos.", "Porque solo los conjuntos pequeños pueden ser confiables.", "Porque los datos actualizados dejan de ser estructurados."], "c": 0, "exp": "La calidad influye directamente en la confiabilidad de los resultados y no depende únicamente del volumen.", "tag": "tag-data", "tl": "Datos"}, {"t": 2, "frag": "Un informe resume cuántos incidentes ocurrieron cada mes durante el último año.", "q": "¿Qué tipo de análisis se está realizando principalmente?", "opts": ["Descriptivo.", "Diagnóstico.", "Prescriptivo."], "c": 0, "exp": "El análisis descriptivo muestra qué ocurrió mediante resúmenes, conteos, tendencias y resultados observados.", "tag": "tag-ana", "tl": "Análisis"}, {"t": 2, "frag": "Después de observar un aumento de incidentes, un analista revisa causas, horarios y cambios recientes para explicar el aumento.", "q": "¿Qué tipo de análisis corresponde?", "opts": ["Predictivo.", "Diagnóstico.", "Descriptivo."], "c": 1, "exp": "El análisis diagnóstico busca explicar por qué ocurrió una situación.", "tag": "tag-ana", "tl": "Análisis"}, {"t": 2, "frag": "Un modelo utiliza datos históricos para estimar cuántos incidentes podrían presentarse el próximo mes.", "q": "¿Qué tipo de análisis está realizando?", "opts": ["Predictivo.", "Prescriptivo.", "Diagnóstico."], "c": 0, "exp": "El análisis predictivo busca anticipar lo que podría ocurrir a partir de patrones observados.", "tag": "tag-ana", "tl": "Análisis"}, {"t": 2, "frag": "Un sistema recomienda aumentar personal en determinadas horas para reducir tiempos de espera.", "q": "¿Qué tipo de análisis refleja mejor esa recomendación?", "opts": ["Descriptivo.", "Prescriptivo.", "Diagnóstico."], "c": 1, "exp": "El análisis prescriptivo sugiere acciones para mejorar resultados o responder a una situación.", "tag": "tag-ana", "tl": "Análisis"}, {"t": 2, "frag": "Un equipo inicia un proyecto de análisis sin haber definido con claridad qué problema desea resolver.", "q": "¿Cuál etapa debería atender primero?", "opts": ["Definir el problema.", "Interpretar resultados.", "Tomar decisiones."], "c": 0, "exp": "El ciclo de vida del análisis inicia por definir el problema o la necesidad que orientará el trabajo.", "tag": "tag-ana", "tl": "Análisis"}, {"t": 2, "frag": "Los registros presentan duplicados, fechas en distintos formatos y campos incompletos.", "q": "¿Qué etapa debe realizarse antes de analizar?", "opts": ["Preparar y limpiar los datos.", "Tomar decisiones.", "Publicar los resultados."], "c": 0, "exp": "La preparación y limpieza busca corregir problemas que podrían afectar el análisis.", "tag": "tag-ana", "tl": "Análisis"}, {"t": 2, "frag": "Una organización procesa cantidades extremadamente grandes de información generada continuamente por sistemas y dispositivos.", "q": "¿Qué concepto describe mejor esta situación?", "opts": ["Big Data.", "Vista.", "Modelo jerárquico."], "c": 0, "exp": "Big Data se refiere a conjuntos de datos muy grandes y de generación frecuente que pueden requerir tecnologías especiales.", "tag": "tag-ana", "tl": "Análisis"}, {"t": 2, "frag": "Una plataforma recibe millones de registros nuevos por minuto.", "q": "¿Qué característica de Big Data se destaca?", "opts": ["Velocidad.", "Variedad.", "Veracidad."], "c": 0, "exp": "Velocidad se refiere a la rapidez con la que los datos se generan, transmiten o procesan.", "tag": "tag-ana", "tl": "Análisis"}, {"t": 2, "frag": "Una organización integra texto, imágenes, registros de sensores, tablas y videos.", "q": "¿Qué característica de Big Data se evidencia principalmente?", "opts": ["Volumen.", "Variedad.", "Valor."], "c": 1, "exp": "Variedad se relaciona con la existencia de diferentes formatos y fuentes de datos.", "tag": "tag-ana", "tl": "Análisis"}, {"t": 2, "frag": "Un conjunto contiene registros duplicados, desactualizados y posiblemente incorrectos.", "q": "¿Qué característica se ve afectada de forma más directa?", "opts": ["Valor.", "Veracidad.", "Variedad."], "c": 1, "exp": "Veracidad está relacionada con la calidad y confiabilidad de los datos.", "tag": "tag-ana", "tl": "Análisis"}, {"t": 3, "frag": "Una empresa representa su estructura organizacional como un árbol: cada empleado tiene un solo supervisor y cada supervisor puede tener varios subordinados.", "q": "¿Qué modelo se ajusta mejor?", "opts": ["Modelo jerárquico.", "Modelo de red.", "Modelo multidimensional."], "c": 0, "exp": "El modelo jerárquico usa una estructura de árbol donde cada hijo tiene un solo padre.", "tag": "tag-model", "tl": "Modelos BD"}, {"t": 3, "frag": "Un nodo puede estar relacionado con varios nodos superiores y participar en relaciones más complejas que un árbol.", "q": "¿Qué modelo corresponde mejor?", "opts": ["Jerárquico.", "De red.", "Relacional."], "c": 1, "exp": "El modelo de red es más flexible que el jerárquico y permite múltiples relaciones entre nodos.", "tag": "tag-model", "tl": "Modelos BD"}, {"t": 3, "frag": "Los datos se organizan en tablas interconectadas mediante claves.", "q": "¿Qué modelo se describe?", "opts": ["Modelo relacional.", "Modelo jerárquico.", "Modelo de red."], "c": 0, "exp": "El modelo relacional organiza datos en tablas y usa claves para relacionarlas.", "tag": "tag-model", "tl": "Modelos BD"}, {"t": 3, "frag": "En una transferencia bancaria, todos los cambios deben completarse correctamente o la operación no debe quedar a medias.", "q": "¿Qué modelo prioriza este tipo de comportamiento?", "opts": ["Modelo multidimensional.", "Modelo transaccional.", "Modelo jerárquico."], "c": 1, "exp": "El modelo transaccional se enfoca en consistencia y fiabilidad de las transacciones.", "tag": "tag-model", "tl": "Modelos BD"}, {"t": 3, "frag": "Una transacción debe ejecutarse como una unidad completa: o se realizan todos sus pasos o no se aplica ninguno.", "q": "¿Con qué propiedad ACID se relaciona principalmente?", "opts": ["Atomicidad.", "Durabilidad.", "Variedad."], "c": 0, "exp": "Atomicidad significa que una transacción se trata como una unidad completa.", "tag": "tag-model", "tl": "Modelos BD"}, {"t": 3, "frag": "Una transacción confirmada debe mantenerse incluso después de una falla posterior del sistema.", "q": "¿Qué propiedad ACID describe mejor esta idea?", "opts": ["Durabilidad.", "Aislamiento.", "Volumen."], "c": 0, "exp": "Durabilidad implica que los cambios confirmados de una transacción deben conservarse.", "tag": "tag-model", "tl": "Modelos BD"}, {"t": 3, "frag": "Una empresa analiza ventas por tiempo, región y producto, utilizando medidas como unidades vendidas y ventas totales.", "q": "¿Qué modelo resulta más apropiado?", "opts": ["Modelo multidimensional.", "Modelo jerárquico.", "Modelo de red."], "c": 0, "exp": "El modelo multidimensional organiza el análisis mediante dimensiones y medidas.", "tag": "tag-model", "tl": "Modelos BD"}, {"t": 3, "frag": "En un cubo OLAP se utilizan tiempo, producto y región para analizar ventas.", "q": "¿Qué representan tiempo, producto y región?", "opts": ["Medidas.", "Dimensiones.", "Claves foráneas obligatorias."], "c": 1, "exp": "Las dimensiones son categorías o perspectivas desde las cuales se analiza la información.", "tag": "tag-model", "tl": "Modelos BD"}, {"t": 3, "frag": "En un análisis OLAP aparecen Ventas Totales y Unidades Vendidas.", "q": "¿Qué representan esos valores?", "opts": ["Dimensiones.", "Medidas.", "Entidades débiles."], "c": 1, "exp": "Las medidas son datos cuantitativos utilizados en el análisis multidimensional.", "tag": "tag-model", "tl": "Modelos BD"}, {"t": 3, "frag": "Un estudiante afirma que el modelo jerárquico y el modelo de red son iguales porque ambos usan nodos.", "q": "¿Cuál diferencia es clave?", "opts": ["En el jerárquico cada hijo tiene un solo padre; en red puede tener múltiples relaciones.", "En red cada hijo tiene un único padre y en jerárquico tiene múltiples padres.", "El jerárquico usa tablas y el de red solo usa hojas de cálculo."], "c": 0, "exp": "La diferencia central es la flexibilidad de las relaciones: el modelo de red permite conexiones múltiples.", "tag": "tag-model", "tl": "Modelos BD"}, {"t": 4, "frag": "El modelo Entidad-Relación permite representar conceptualmente una base de datos mediante entidades, atributos y relaciones.", "q": "¿Cuál es su propósito principal?", "opts": ["Facilitar el diseño conceptual de una base de datos.", "Ejecutar directamente consultas SQL en PostgreSQL.", "Sustituir todas las reglas de negocio por código."], "c": 0, "exp": "El modelo ER facilita la representación conceptual de la estructura y significado de una base de datos.", "tag": "tag-er", "tl": "ER / ERE"}, {"t": 4, "frag": "Cliente puede existir por sí mismo y posee una clave primaria propia.", "q": "¿Cómo se clasifica esta entidad?", "opts": ["Entidad fuerte.", "Entidad débil.", "Atributo multivaluado."], "c": 0, "exp": "Una entidad fuerte tiene existencia independiente y puede identificarse mediante su propia clave.", "tag": "tag-er", "tl": "ER / ERE"}, {"t": 4, "frag": "Transacción depende de la existencia de una Cuenta y no puede identificarse únicamente con sus propios atributos.", "q": "¿Cómo se clasifica?", "opts": ["Entidad fuerte.", "Entidad débil.", "Relación ternaria."], "c": 1, "exp": "Una entidad débil depende de una entidad fuerte para su existencia o identificación.", "tag": "tag-er", "tl": "ER / ERE"}, {"t": 4, "frag": "El atributo número_de_cuenta no se divide en componentes más pequeños dentro del modelo.", "q": "¿Qué tipo de atributo es?", "opts": ["Simple.", "Compuesto.", "Derivado."], "c": 0, "exp": "Un atributo simple no se descompone en subcomponentes.", "tag": "tag-er", "tl": "ER / ERE"}, {"t": 4, "frag": "El atributo dirección se divide en provincia, cantón, distrito y señas.", "q": "¿Qué tipo de atributo es?", "opts": ["Multivaluado.", "Compuesto.", "Derivado."], "c": 1, "exp": "Un atributo compuesto puede descomponerse en otros atributos más pequeños.", "tag": "tag-er", "tl": "ER / ERE"}, {"t": 4, "frag": "Una persona puede registrar varios números de teléfono.", "q": "¿Qué tipo de atributo representa teléfono?", "opts": ["Simple.", "Derivado.", "Multivaluado."], "c": 2, "exp": "Un atributo multivaluado puede tener más de un valor para una misma entidad.", "tag": "tag-er", "tl": "ER / ERE"}, {"t": 4, "frag": "La edad se calcula a partir de la fecha de nacimiento.", "q": "¿Qué tipo de atributo es edad en este caso?", "opts": ["Derivado.", "Compuesto.", "Clave."], "c": 0, "exp": "Un atributo derivado se obtiene mediante cálculo a partir de otros atributos.", "tag": "tag-er", "tl": "ER / ERE"}, {"t": 4, "frag": "Un estudiante tiene un único expediente y cada expediente pertenece a un único estudiante.", "q": "¿Qué cardinalidad describe mejor la relación?", "opts": ["1:1.", "1:N.", "N:M."], "c": 0, "exp": "Cuando cada instancia de ambos lados se relaciona con una sola instancia del otro lado, la relación es 1:1.", "tag": "tag-er", "tl": "ER / ERE"}, {"t": 4, "frag": "CuentaAhorro y CuentaCorriente se agrupan bajo una entidad general llamada Cuenta.", "q": "¿Qué proceso ERE se aplica?", "opts": ["Especialización.", "Generalización.", "Derivación."], "c": 1, "exp": "La generalización agrupa subtipos más específicos en un supertipo más general.", "tag": "tag-er", "tl": "ER / ERE"}, {"t": 4, "frag": "La entidad Empleado se divide en Gerente y Cajero, cada uno con atributos particulares.", "q": "¿Qué proceso ERE se aplica?", "opts": ["Especialización.", "Generalización.", "Normalización."], "c": 0, "exp": "La especialización parte de un supertipo y crea subtipos más específicos.", "tag": "tag-er", "tl": "ER / ERE"}, {"t": 5, "frag": "Antes de crear tablas, un equipo organiza qué información necesita el sistema de un colegio: estudiantes, profesores, cursos y matrículas.", "q": "¿Qué actividad está realizando?", "opts": ["Modelado de datos.", "Eliminación de datos.", "Cifrado de datos."], "c": 0, "exp": "Modelar datos significa organizar la información antes de implementar la base de datos.", "tag": "tag-sql", "tl": "PostgreSQL"}, {"t": 5, "frag": "En una tabla Estudiantes aparecen las columnas id, nombre, edad y correo.", "q": "¿Qué representan las columnas?", "opts": ["Entidades.", "Atributos.", "Instancias completas."], "c": 1, "exp": "Las columnas representan atributos o características de la entidad.", "tag": "tag-sql", "tl": "PostgreSQL"}, {"t": 5, "frag": "Repaso conceptual y de aplicación.", "q": "En una tabla, la fila completa de Ana con todos sus valores se denomina:", "opts": ["Esquema.", "Tupla o registro.", "Vista."], "c": 1, "exp": "Cada fila completa de una tabla se denomina tupla o registro.", "tag": "tag-sql", "tl": "PostgreSQL"}, {"t": 5, "frag": "Una base de datos define tablas, columnas y tipos de datos.", "q": "¿Cómo se denomina esa estructura?", "opts": ["Esquema.", "Instancia.", "Medida."], "c": 0, "exp": "El esquema describe la estructura de la base de datos.", "tag": "tag-sql", "tl": "PostgreSQL"}, {"t": 5, "frag": "Repaso conceptual y de aplicación.", "q": "Los datos que están almacenados en la base en un momento específico se denominan:", "opts": ["Esquema.", "Instancia.", "Metadatos obligatoriamente."], "c": 1, "exp": "La instancia es el conjunto de datos existentes en un momento determinado.", "tag": "tag-sql", "tl": "PostgreSQL"}, {"t": 5, "frag": "Un equipo describe las ideas del negocio con la frase «un estudiante se matricula en cursos».", "q": "¿Qué nivel de modelado representa principalmente?", "opts": ["Conceptual.", "Lógico.", "Físico."], "c": 0, "exp": "El modelo conceptual describe las ideas y relaciones generales del negocio.", "tag": "tag-sql", "tl": "PostgreSQL"}, {"t": 5, "frag": "El diseño ya especifica tablas, atributos, relaciones y claves, pero todavía no se implementa en PostgreSQL.", "q": "¿Qué nivel de modelado corresponde?", "opts": ["Conceptual.", "Lógico.", "Físico."], "c": 1, "exp": "El modelo lógico describe tablas, atributos, relaciones y claves.", "tag": "tag-sql", "tl": "PostgreSQL"}, {"t": 5, "frag": "Las estructuras ya se implementan realmente dentro de PostgreSQL.", "q": "¿Qué nivel de modelado es?", "opts": ["Lógico.", "Físico.", "Conceptual."], "c": 1, "exp": "El modelo físico corresponde a la implementación real en el sistema gestor.", "tag": "tag-sql", "tl": "PostgreSQL"}, {"t": 5, "frag": "PostgreSQL permite crear tablas, insertar datos, consultar información y relacionar tablas.", "q": "¿Cómo se clasifica PostgreSQL según el material?", "opts": ["Sistema gestor de bases de datos relacional.", "Lenguaje de programación exclusivamente.", "Modelo multidimensional."], "c": 0, "exp": "PostgreSQL se presenta como un sistema gestor de bases de datos relacional.", "tag": "tag-sql", "tl": "PostgreSQL"}, {"t": 5, "frag": "Se necesita almacenar la edad de una persona con valores enteros como 17, 18 o 25.", "q": "¿Qué tipo de dato es el más apropiado?", "opts": ["INT.", "DATE.", "BOOLEAN."], "c": 0, "exp": "INT se utiliza para números enteros.", "tag": "tag-sql", "tl": "PostgreSQL"}, {"t": 5, "frag": "Se necesita almacenar precios como 25.50 y 183.99.", "q": "¿Qué tipo de dato es más apropiado?", "opts": ["DECIMAL.", "BOOLEAN.", "SERIAL."], "c": 0, "exp": "DECIMAL se utiliza para valores numéricos con parte decimal.", "tag": "tag-sql", "tl": "PostgreSQL"}, {"t": 5, "frag": "Se necesita almacenar si una cuenta está activa o inactiva usando TRUE/FALSE.", "q": "¿Qué tipo de dato corresponde?", "opts": ["VARCHAR.", "BOOLEAN.", "DATE."], "c": 1, "exp": "BOOLEAN representa valores verdadero/falso.", "tag": "tag-sql", "tl": "PostgreSQL"}, {"t": 5, "frag": "Se desea almacenar nombres de hasta 100 caracteres.", "q": "¿Qué definición es adecuada?", "opts": ["nombre VARCHAR(100)", "nombre BOOLEAN", "nombre DATE"], "c": 0, "exp": "VARCHAR(n) permite almacenar texto corto hasta el límite especificado.", "tag": "tag-sql", "tl": "PostgreSQL"}, {"t": 5, "frag": "Se desea crear una nueva base llamada colegio.", "q": "¿Qué sentencia es la adecuada?", "opts": ["CREATE DATABASE colegio;", "SELECT DATABASE colegio;", "UPDATE DATABASE colegio;"], "c": 0, "exp": "CREATE DATABASE se utiliza para crear una base de datos.", "tag": "tag-sql", "tl": "PostgreSQL"}, {"t": 5, "frag": "Se necesita agregar nuevos registros a una tabla existente.", "q": "¿Qué operación SQL corresponde?", "opts": ["INSERT.", "UPDATE.", "ORDER BY."], "c": 0, "exp": "INSERT se utiliza para insertar nuevos registros.", "tag": "tag-sql", "tl": "PostgreSQL"}, {"t": 5, "frag": "Se desea recuperar todos los registros de la tabla estudiantes.", "q": "¿Qué sentencia coincide con lo estudiado?", "opts": ["SELECT * FROM estudiantes;", "UPDATE * FROM estudiantes;", "DELETE * FROM estudiantes;"], "c": 0, "exp": "SELECT * FROM tabla consulta todas las columnas de los registros.", "tag": "tag-sql", "tl": "PostgreSQL"}, {"t": 5, "frag": "Se desea mostrar únicamente estudiantes con edad mayor o igual a 18.", "q": "¿Qué cláusula se utiliza para aplicar la condición?", "opts": ["WHERE.", "ORDER BY.", "REFERENCES."], "c": 0, "exp": "WHERE filtra registros según una condición.", "tag": "tag-sql", "tl": "PostgreSQL"}, {"t": 5, "frag": "Se desea ordenar los resultados por nombre.", "q": "¿Qué cláusula corresponde?", "opts": ["ORDER BY.", "WHERE.", "UPDATE."], "c": 0, "exp": "ORDER BY permite ordenar los resultados de una consulta.", "tag": "tag-sql", "tl": "PostgreSQL"}, {"t": 5, "frag": "Una columna debe identificar de manera única cada registro.", "q": "¿Qué restricción corresponde?", "opts": ["PRIMARY KEY.", "FOREIGN KEY.", "ORDER BY."], "c": 0, "exp": "PRIMARY KEY identifica registros únicos.", "tag": "tag-sql", "tl": "PostgreSQL"}, {"t": 5, "frag": "Una matrícula intenta referenciar un estudiante que no existe.", "q": "¿Qué regla explica el rechazo de la operación?", "opts": ["Integridad referencial.", "Independencia física.", "Especialización."], "c": 0, "exp": "La integridad referencial impide relaciones hacia registros inexistentes.", "tag": "tag-sql", "tl": "PostgreSQL"}, {"t": 6, "frag": "Un técnico puede acceder a información personal gracias a sus permisos, pero la tarea asignada no requiere esos datos.", "q": "¿Cuál decisión es más coherente con la ética estudiada?", "opts": ["Acceder porque técnicamente puede hacerlo.", "Verificar necesidad y autorización y limitar el acceso a lo estrictamente necesario.", "Copiar los datos para analizarlos después sin informar a nadie."], "c": 1, "exp": "Tener capacidad técnica no equivale a tener una finalidad legítima; se debe actuar con necesidad, autorización y responsabilidad.", "tag": "tag-eth", "tl": "Ética"}, {"t": 6, "frag": "Una organización solicita datos que no son necesarios para prestar el servicio.", "q": "¿Qué valor se compromete especialmente?", "opts": ["Respeto.", "Velocidad.", "Atomicidad."], "c": 0, "exp": "El respeto implica reconocer privacidad, derechos y límites, y solicitar únicamente los datos necesarios.", "tag": "tag-eth", "tl": "Ética"}, {"t": 6, "frag": "Un analista se niega a modificar resultados para favorecer una conclusión deseada.", "q": "¿Qué valor representa mejor esa conducta?", "opts": ["Probidad.", "Variedad.", "Generalización."], "c": 0, "exp": "La probidad implica actuar con integridad, honestidad y apego a los deberes profesionales.", "tag": "tag-eth", "tl": "Ética"}, {"t": 6, "frag": "Un funcionario rechaza un beneficio económico a cambio de alterar registros para favorecer a una persona.", "q": "¿Qué principio o valor se aplica de forma más directa?", "opts": ["Anticorrupción.", "Compromiso únicamente.", "Actualidad."], "c": 0, "exp": "Anticorrupción implica rechazar sobornos, favoritismos, manipulación y ventajas indebidas.", "tag": "tag-eth", "tl": "Ética"}, {"t": 6, "frag": "Un profesional protege la confidencialidad, sigue políticas, documenta sus acciones y responde por sus decisiones.", "q": "¿Qué valor se refleja principalmente?", "opts": ["Compromiso.", "Variedad.", "Autoridad."], "c": 0, "exp": "Compromiso supone cumplir obligaciones, proteger información y asumir responsabilidad por los efectos de las decisiones.", "tag": "tag-eth", "tl": "Ética"}, {"t": 6, "frag": "Durante la recolección de datos se define una finalidad clara y se solicitan solo los datos mínimos necesarios.", "q": "¿Qué etapa del ciclo de protección corresponde?", "opts": ["Recolectar.", "Compartir.", "Eliminar."], "c": 0, "exp": "En la recolección se establece el propósito y se minimizan los datos solicitados.", "tag": "tag-eth", "tl": "Ética"}, {"t": 6, "frag": "Los datos se guardan con controles de acceso, copias seguras y protección contra pérdida.", "q": "¿Qué etapa del ciclo se está protegiendo?", "opts": ["Almacenar.", "Eliminar.", "Interpretar."], "c": 0, "exp": "Durante el almacenamiento deben aplicarse controles de acceso, respaldos y medidas contra pérdida.", "tag": "tag-eth", "tl": "Ética"}, {"t": 6, "frag": "Repaso conceptual y de aplicación.", "q": "¿Cuál ley costarricense estudiada protege la autodeterminación informativa y regula el tratamiento de datos personales?", "opts": ["Ley N.° 8968.", "Ley N.° 7600.", "Ley N.° 7472."], "c": 0, "exp": "La Ley N.° 8968 es la norma estudiada sobre protección de la persona frente al tratamiento de sus datos personales.", "tag": "tag-eth", "tl": "Ética"}, {"t": 6, "frag": "Repaso conceptual y de aplicación.", "q": "¿Qué institución ejerce funciones de supervisión y tramita procedimientos relacionados con protección de datos en Costa Rica según el material?", "opts": ["PRODHAB.", "PostgreSQL.", "OLAP."], "c": 0, "exp": "PRODHAB es la Agencia de Protección de Datos de los Habitantes.", "tag": "tag-eth", "tl": "Ética"}, {"t": 6, "frag": "Un conjunto de entrenamiento representa muy poco a una parte de la población.", "q": "¿Qué riesgo debe revisarse especialmente?", "opts": ["Sesgo en los datos o en el análisis.", "Independencia física.", "Modelo jerárquico."], "c": 0, "exp": "Una representación insuficiente puede producir sesgos y resultados injustos.", "tag": "tag-eth", "tl": "Ética"}, {"t": 7, "frag": "Las TI se estudian como recursos para crear, procesar, almacenar, transmitir, proteger y recuperar información.", "q": "¿Cuál conjunto de componentes aparece en el material?", "opts": ["Personas, procesos, tecnología y datos.", "Únicamente hardware y software.", "Solo bases de datos y redes."], "c": 0, "exp": "El enfoque estudiado integra personas, procesos, tecnología y datos.", "tag": "tag-ti", "tl": "TI"}, {"t": 7, "frag": "Una organización automatiza tareas para disminuir el tiempo de procesamiento.", "q": "¿Qué aporte de las TI se destaca?", "opts": ["Velocidad.", "Autoridad.", "Generalización."], "c": 0, "exp": "Las TI pueden automatizar tareas y reducir tiempos de procesamiento.", "tag": "tag-ti", "tl": "TI"}, {"t": 7, "frag": "Un equipo comparte documentos, coordina actividades y conserva versiones de trabajo.", "q": "¿Qué aporte de las TI se evidencia?", "opts": ["Colaboración.", "Volumen.", "Atomicidad."], "c": 0, "exp": "La colaboración permite compartir documentos, coordinar equipos y mantener versiones.", "tag": "tag-ti", "tl": "TI"}, {"t": 7, "frag": "Una organización clasifica, etiqueta e indexa archivos para encontrarlos con rapidez.", "q": "¿Qué aporte se refleja?", "opts": ["Organización.", "Especialización.", "Diagnóstico."], "c": 0, "exp": "Organización implica clasificar, etiquetar, indexar y recuperar información.", "tag": "tag-ti", "tl": "TI"}, {"t": 7, "frag": "Se aplican permisos, respaldos, cifrado y controles de acceso.", "q": "¿Qué dimensión de importancia de las TI se enfatiza?", "opts": ["Protección.", "Velocidad.", "Variedad."], "c": 0, "exp": "La protección incluye permisos, respaldo, cifrado y controles de acceso.", "tag": "tag-ti", "tl": "TI"}, {"t": 7, "frag": "Se necesita elaborar un manual extenso con procedimientos y explicaciones detalladas.", "q": "¿Qué recurso digital es más apropiado?", "opts": ["Documento.", "Presentación únicamente.", "Base de datos como primera opción."], "c": 0, "exp": "Los documentos son apropiados para informes, manuales, actas, procedimientos y documentación extensa.", "tag": "tag-ti", "tl": "TI"}, {"t": 7, "frag": "Se necesita realizar cálculos, limpiar datos, aplicar filtros y generar gráficos.", "q": "¿Qué recurso es más adecuado?", "opts": ["Hoja de cálculo.", "Presentación.", "Gestor de carpetas."], "c": 0, "exp": "Las hojas de cálculo se orientan a cálculo, limpieza, tablas, filtros, análisis y gráficos.", "tag": "tag-ti", "tl": "TI"}, {"t": 7, "frag": "Al evaluar una fuente, se pregunta «¿Quién publica y tiene conocimiento o responsabilidad sobre el tema?»", "q": "¿Qué criterio se está evaluando?", "opts": ["Autoridad.", "Actualidad.", "Propósito."], "c": 0, "exp": "Autoridad se refiere a quién publica y a su conocimiento o responsabilidad sobre el tema.", "tag": "tag-ti", "tl": "TI"}, {"t": 7, "frag": "Al evaluar una fuente, se revisa cuándo fue publicada o actualizada y si la información sigue vigente.", "q": "¿Qué criterio se aplica?", "opts": ["Actualidad.", "Evidencia.", "Consistencia."], "c": 0, "exp": "Actualidad evalúa vigencia y fecha de publicación o actualización.", "tag": "tag-ti", "tl": "TI"}, {"t": 7, "frag": "Un trabajo exige evidencia, rigor metodológico, citación y trazabilidad de las fuentes.", "q": "¿Qué perspectiva predomina?", "opts": ["Académica.", "Comercial.", "Transaccional."], "c": 0, "exp": "La perspectiva académica prioriza evidencia, rigor metodológico, citación y trazabilidad.", "tag": "tag-ti", "tl": "TI"}];
+const COUNTS={1:10,2:10,3:10,4:10,5:20,6:10,7:10};
+const TOTAL=QS.length;
+const state={ok:0,fail:0,ans:new Set()};
+const tok={};
+TOPICS.forEach(t=>tok[t.id]={ok:0,fail:0,tot:COUNTS[t.id]||0});
+
+function buildShell(){
+  const tabs=document.getElementById('tabs');
+  const sections=document.getElementById('sections');
+  TOPICS.forEach((t,idx)=>{
+    const b=document.createElement('button');
+    b.className='tab'+(idx===0?' active':'');
+    b.textContent=`${t.short} (${COUNTS[t.id]})`;
+    b.onclick=()=>show('t'+t.id,b);
+    tabs.appendChild(b);
+
+    const s=document.createElement('div');
+    s.id='t'+t.id;
+    s.className='section'+(idx===0?' active':'');
+    s.innerHTML=`<div class="sec-hd"><h3>${t.name}</h3><p>${COUNTS[t.id]} preguntas de repaso sobre este bloque del temario.</p></div>
+                 <div class="dots" id="d${t.id}"></div><div id="q${t.id}"></div>`;
+    sections.appendChild(s);
+  });
+  const rb=document.createElement('button');
+  rb.className='tab'; rb.textContent='Resultados';
+  rb.onclick=()=>show('res',rb);
+  tabs.appendChild(rb);
+
+  const br=document.getElementById('breakdownRows');
+  TOPICS.forEach(t=>{
+    const row=document.createElement('div');
+    row.className='brow';
+    row.innerHTML=`<span>${t.name} (${COUNTS[t.id]})</span><span id="br${t.id}" style="font-weight:700">—</span>`;
+    br.appendChild(row);
+  });
+}
+
+function buildQuestions(){
+  TOPICS.forEach(t=>{
+    const qs=QS.filter(q=>q.t===t.id);
+    const qc=document.getElementById('q'+t.id);
+    const dc=document.getElementById('d'+t.id);
+    qs.forEach(q=>{
+      const gi=QS.indexOf(q);
+      const dot=document.createElement('div');
+      dot.className='dot'; dot.id='dot-'+gi; dot.textContent=gi+1;
+      dot.title='Pregunta '+(gi+1);
+      dot.onclick=()=>document.getElementById('card-'+gi).scrollIntoView({behavior:'smooth',block:'center'});
+      dc.appendChild(dot);
+
+      const card=document.createElement('div');
+      card.className='q-card'; card.id='card-'+gi;
+      card.innerHTML=`
+        <div class="q-meta">
+          <span class="q-num">Pregunta ${gi+1} de ${TOTAL}</span>
+          <span class="q-tag ${q.tag}">${q.tl}</span>
+        </div>
+        <div class="frag">${q.frag}</div>
+        <div class="q-txt">${q.q}</div>
+        <div class="opts" id="o${gi}">
+          ${q.opts.map((o,oi)=>`<button class="opt" onclick="pick(${gi},${oi})"><span class="opt-l">${['A)','B)','C)'][oi]}</span><span>${o}</span></button>`).join('')}
+        </div>
+        <div class="fb" id="f${gi}"></div>`;
+      qc.appendChild(card);
+    });
+  });
+}
+
+function pick(gi,oi){
+  const q=QS[gi];
+  const opts=document.querySelectorAll(`#o${gi} .opt`);
+  if(opts[0].classList.contains('disabled')) return;
+  opts.forEach(o=>o.classList.add('disabled'));
+  const fb=document.getElementById('f'+gi);
+  const dot=document.getElementById('dot-'+gi);
+  const id='q'+gi;
+  if(state.ans.has(id)) return;
+  state.ans.add(id);
+  if(oi===q.c){
+    opts[oi].classList.add('correct');
+    fb.className='fb show ok';
+    fb.innerHTML=`<strong>✓ Correcto.</strong> ${q.exp}`;
+    state.ok++; tok[q.t].ok++;
+    dot.classList.add('ok'); dot.textContent='✓';
+  } else {
+    opts[oi].classList.add('wrong');
+    opts[q.c].classList.add('reveal');
+    fb.className='fb show fail';
+    fb.innerHTML=`<strong>✗ Incorrecto.</strong> La respuesta correcta era <strong>${['A)','B)','C)'][q.c]}</strong>. ${q.exp}`;
+    state.fail++; tok[q.t].fail++;
+    dot.classList.add('fail'); dot.textContent='✗';
+  }
+  upd();
+}
+
+function upd(){
+  const a=state.ans.size;
+  const pctAnswered=a>0?Math.round((state.ok/a)*100):0;
+  const pctTotal=Math.round((state.ok/TOTAL)*100);
+  document.getElementById('s-ok').textContent=state.ok;
+  document.getElementById('s-fail').textContent=state.fail;
+  document.getElementById('s-ans').textContent=a;
+  document.getElementById('s-pct').textContent=a>0?pctAnswered+'%':'—';
+  document.getElementById('bar-txt').textContent=`${a} de ${TOTAL} preguntas`;
+  document.getElementById('bar-fill').style.width=Math.round((a/TOTAL)*100)+'%';
+  document.getElementById('chip').textContent=`${state.ok} / ${TOTAL}`;
+  document.getElementById('rs').textContent=state.ok+'/'+TOTAL;
+  document.getElementById('rf').textContent=`${pctAnswered}% de aciertos sobre las respondidas · ${a}/${TOTAL} completadas`;
+  document.getElementById('rn').textContent=a>0?`Resultado acumulado: ${pctTotal}% del total`:'';
+
+  let msg='Complete las secciones para ver su resultado.';
+  if(a>0){
+    if(pctAnswered>=90) msg='Dominio muy alto. Revise únicamente los ítems en los que falló.';
+    else if(pctAnswered>=80) msg='Muy buen dominio. Conviene reforzar los temas con menor porcentaje.';
+    else if(pctAnswered>=70) msg='Buen avance. Aún hay contenidos que requieren repaso antes de la prueba.';
+    else if(pctAnswered>=60) msg='Repase con atención las explicaciones y vuelva a trabajar los temas débiles.';
+    else msg='Se recomienda revisar nuevamente el material del curso y repetir la práctica.';
+  }
+  document.getElementById('rm').textContent=msg;
+
+  TOPICS.forEach(t=>{
+    const el=document.getElementById('br'+t.id);
+    const answered=tok[t.id].ok+tok[t.id].fail;
+    if(answered===0){el.textContent='Pendiente';el.style.color='#89969e';return;}
+    const p=Math.round((tok[t.id].ok/answered)*100);
+    el.textContent=`${tok[t.id].ok}/${answered} correctas (${p}%)`;
+    el.style.color=p>=70?'#167a4a':'#b33b32';
+  });
+}
+
+function show(id,tab){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  tab.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+buildShell();
+buildQuestions();
+upd();
+
+(function(){
+  function syncStickyOffset(){
+    const bar=document.querySelector('.topbar');
+    const tabs=document.querySelector('.tabs');
+    if(bar && tabs){
+      tabs.style.top=(bar.getBoundingClientRect().height)+'px';
+    }
+  }
+  window.addEventListener('load', syncStickyOffset);
+  window.addEventListener('resize', syncStickyOffset);
+  window.addEventListener('orientationchange', syncStickyOffset);
+})();
+
+</script>
+</body>
+</html>
